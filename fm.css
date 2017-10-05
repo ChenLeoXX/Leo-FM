@@ -90,7 +90,7 @@ main {
 }
 
 .song {
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
     margin-top: 20px;
     color: #fff;
@@ -102,6 +102,47 @@ main {
     justify-content: space-between;
     width: 300px;
     margin-top: 120px;
+}
+
+.sound {
+    position: relative;
+}
+
+.sound i {
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.length {
+    position: absolute;
+    top: 18px;
+    left: 30px;
+    width: 200px;
+    height: 3px;
+    background: #aaa;
+    display: none;
+    cursor: pointer;
+}
+
+.circle {
+    position: absolute;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    position: absolute;
+    top:  -5px;
+    left: 198px;
+}
+
+.voice {
+    position: relative;
+    width: 100%;
+    height: 3px;
+    background: #c70c0c;
 }
 
 .process {
@@ -131,26 +172,42 @@ main {
 }
 
 .author {
-  margin-top: 40px;
+    float: right;
+    margin-top: 10px;
 }
+
 .author p {
-  color:#fff;
-  font-size:20px;
+    color: #fff;
+    font-size: 25px;
 }
+
 .songauthor {
-  color:#444;
+    color: #fff;
 }
+
 .albums {
-  width: 100%;
-  height:150px;
-  margin-top: 30px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background: rgba(224, 219, 219, 0.2);
-  color:rgba(255,255,255,0.8);
-  text-align:center;
+    position: relative;
+    width: 100%;
+    height: 150px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(224, 219, 219, 0.2);
+    color: rgba(0, 0, 0, 0.7);
+    text-align: center;
 }
+
 .albums img {
-  width: 110px;
+    width: 110px;
+    cursor: pointer;
+    box-shadow: 0px 2px 4px 4px rgba(0, 0, 0,0.2)
+}
+.albums li:hover {
+   transform: scale(1.1);
+}
+ .left i,.right i {
+    font-size:30px;
+    color:#fff;
+    cursor: pointer;
 }

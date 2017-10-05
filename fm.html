@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="referrer" content="no-referrer">
   <link rel="stylesheet" href="fm.css">
-  <link rel="stylesheet" href="https://at.alicdn.com/t/font_433795_nf1otuzwnjwqm2t9.css">
-  <link rel="stylesheet" href="https://cdn.bootcss.com/jquery/2.1.0/jquery.js">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_433795_5gwup0z8ziwwmi.css">
   <title>Leo-FM</title>
 </head>
 
@@ -16,19 +16,19 @@
   <main class="clearfix">
     <div class="info clearfix">
       <div class="album-img">
-        <img src="img/2.png" alt="">
+        <img src="" alt="">
       </div>
       <div class="control">
-        <span><i class="iconfont icon-heart" aria-hidden="true"></i></span>
-        <span><i class="iconfont icon-pause" aria-hidden="true"></i></span>
-        <span><i class="iconfont icon-xiayishou" aria-hidden="true"></i></span>
+        <span class="like"><i class="iconfont icon-heart" aria-hidden="true"></i></span>
+        <span class="pause"><i class="iconfont icon-pause" aria-hidden="true"></i></span>
+        <span class="next"><i class="iconfont icon-xiayishou" aria-hidden="true"></i></span>
       </div>
     </div>
     <div class="music-panel clearfix">
       <div class="album-name">
-        <button>专辑名称</button>
+        <button>随机播放</button>
       </div>
-      <h2 class="song">Song Title</h2>
+      <h2 class="song">It's My Life Style</h2>
       <div class="music-info">
         <span><i class="iconfont icon-listen" aria-hidden="true"></i>  36550</span>
         <span><i class="iconfont icon-heart" aria-hidden="true"></i>  999</span>
@@ -36,9 +36,18 @@
       </div>
       <div class="process">
         <div class="total">
-            <div class="time">0:00</div>
+          <div class="time">0:00</div>
           <div class="current"></div>
         </div>
+      </div>
+      <div class="sound">
+        <div class="length">
+          <div class="voice">
+            <div class="circle">
+            </div>
+          </div>
+        </div>
+        <span><i class="iconfont icon-soundplus" aria-hidden="true"></i></span>
       </div>
       <div class="author">
         <p>My song</p>
@@ -47,31 +56,35 @@
     </div>
   </main>
   <ul class="albums">
-      <li>
-        <img src="img/1.png" alt="">
-        <p>夏日清新</p>
-      </li>
-      <li>
-        <img src="img/2.png" alt="">
-        <p>夏日清新</p>
-      </li>
-      <li>
-        <img src="img/3.png" alt="">
-        <p>欧美流行</p>
-      </li>
-      <li>
-        <img src="img/4.png" alt="">
-        <p>夏日清新</p>
-      </li>
-      <li>
-        <img src="img/5.png" alt="">
-        <p>BillBooard</p>
-      </li>
-      <li>
-        <img src="img/6.png" alt="">
-        <p>暖电磁场</p>
-      </li>
-    </ul> 
+      <span class="left"><i class="iconfont icon-left" aria-hidden="true"></i></span>      
+    <li>
+      <img src="img/1.png" alt="">
+      <p>夏日轻松</p>
+    </li>
+    <li>
+      <img src="img/2.png" alt="">
+      <p>华语清新</p>
+    </li>
+    <li>
+      <img src="img/3.png" alt="">
+      <p>欧美流行</p>
+    </li>
+    <li>
+      <img src="img/4.png" alt="">
+      <p>动漫次元</p>
+    </li>
+    <li>
+      <img src="img/5.png" alt="">
+      <p>BillBooard</p>
+    </li>
+    <li>
+      <img src="img/6.png" alt="">
+      <p>暖电磁场</p>
+    </li>
+    <span class="right"><i class="iconfont icon-right" aria-hidden="true"></i></span>    
+  </ul>
+  <script src="https://cdn.bootcss.com/jquery/2.1.0/jquery.js"></script>
+  <script src="fm.js"></script>
 </body>
 
 </html>
