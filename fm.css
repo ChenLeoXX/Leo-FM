@@ -58,6 +58,7 @@ main {
 .album-img img {
     height: 350px;
     width: 360px;
+    box-shadow: 2px 2px 4px 4px rgba(0, 0, 0, 0.3);
 }
 
 .control {
@@ -102,6 +103,10 @@ main {
     justify-content: space-between;
     width: 300px;
     margin-top: 120px;
+    
+}
+.music-info span {
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .sound {
@@ -207,7 +212,7 @@ main {
 .albums img {
     width: 110px;
     cursor: pointer;
-    box-shadow: 0px 2px 4px 4px rgba(0, 0, 0, 0.2)
+    box-shadow: 2px 2px 4px 4px rgba(0, 0, 0, 0.3);
 }
 
 .albums li:hover {

@@ -1,31 +1,47 @@
 // Ajax 请求
 var audio = new Audio()
-audio.autoplay = false
-var channel = ''
-
-getRanMusic(call)
+audio.autoplay = true
+var channel
+getRanMusic(channel)
+//jQ写法
 function getRanMusic() {
-  var xhr = new XMLHttpRequest()
-  xhr.open('GET', 'https://jirenguapi.applinzi.com/fm/getSong.php', true)
-  xhr.onload = function (callback) {
-    if ((xhr.status >= 200 && xhr.status <= 300) || xhr.status === 304) {
-      var data = JSON.parse(xhr.responseText)
-      call(data)
-    }
-  }
-  xhr.send()
+  $.get('https://jirenguapi.applinzi.com/fm/getSong.php?channel=4', { channel: channel })
+    .done(function (song) {
+      musicObj = JSON.parse(song).song[0]
+      loadMusic(musicObj)
+      getNum()
+    }).fail(function(){
+            getRanMusic()
+    })   
 }
-function call(data) {
-  musicObj = data.song[0]
-  console.log(musicObj)
-  loadMusic(musicObj)
-}
+//原生常规写法
+// var xhr = new XMLHttpRequest()
+// xhr.open('GET', 'http://api.jirengu.com/fm/getSong.php?',{ channel: channel},true)
+// xhr.onload = function (callback) {
+//   if ((xhr.status >= 200 && xhr.status <= 300) || xhr.status === 304) {
+//     var data = JSON.parse(xhr.responseText)
+//     call(data)
+//   }
+// }
+// xhr.send()
+// }
+// function call(data) {
+//   musicObj = data.song[0]
+//   console.log(musicObj)
+//   loadMusic(musicObj)
+// }
 function loadMusic() {
   audio.src = musicObj.url
   $('.songauthor').text(musicObj.artist)
   $('.author p').text(musicObj.title)
   $('.album-img img').attr('src', musicObj.picture)
 }
+//点击专辑切换歌曲功能
+$('.albums li').on('click', function (e) {
+  channel = $(e.target).attr('channel-data')
+  $('.album-name button').text($(this).text())
+  getRanMusic(channel)
+})
 //暂停/播放
 $('.pause').on('click', function () {
   if (audio.paused) {
@@ -39,12 +55,21 @@ $('.pause').on('click', function () {
 //下一首
 $('.next').on('click', function () {
   $('.like i').css('color', 'white')
-  getRanMusic()
+  getRanMusic(musicObj)
 })
+//自动播放下一首
+audio.onended = function () {
+  getRanMusic(channel)
+}
 //喜欢
 $('.like').on('click', function () {
   $('.like i').css('color', 'red')
 })
+//收听量，收藏数。
+function getNum() {
+  $('.music-info span').eq(0).text(' '+(Math.floor(Math.random()*4000)+1000))
+  $('.music-info span').eq(1).text(' '+(Math.floor(Math.random()*999 )+100))
+}
 //进度条
 audio.onplaying = function () {
   process = setInterval(function () {
@@ -82,10 +107,7 @@ $('.length').on('click', function (e) {
   audio.volume = e.offsetX / 200
   $('.circle').css('left', e.offsetX + 'px')
 })
-$.get('https://jirenguapi.applinzi.com/fm/getSong.php', { channel: "public_yuzhong_hanyu" })
-  .done(function (song) {
-    console.log(JSON.parse(song).song[0])
-  })
+
 // 专辑滑动(使用函数节流解决快速点击导致滑动不准确问题)
 $('.left').on('click', function () {
   trans('left')
@@ -96,27 +118,42 @@ $('.right').on('click', function () {
 //定时器
 var timer
 function trans(direction) {
-  if(timer){
+  if (timer) {
     clearTimeout(timer)
   }
-    timer = setTimeout(function() {
-      var translateX
-      var transStyle = getComputedStyle(document.querySelector('.carrousel')).transform
-      var curTrans = parseInt(transStyle.split('(')[1].split(')')[0].split(',')[4])
-      var windowWrap = parseInt($('.window').css('width'))
-      if (direction === 'right') {
-        translateX = curTrans - windowWrap
-      } else {
-        translateX = curTrans + windowWrap
-      }
-      if (translateX > 0) {
-        translateX = 0
-      }
-      if(translateX  <= -3450 ) {
-        translateX = -2300
-      }
-      $('.carrousel').css('transform', 'translateX(' + translateX + 'px)')
-    }, 300);
+  timer = setTimeout(function () {
+    var translateX
+    var transStyle = getComputedStyle(document.querySelector('.carrousel')).transform
+    var curTrans = parseInt(transStyle.split('(')[1].split(')')[0].split(',')[4])
+    var windowWrap = parseInt($('.window').css('width'))
+    if (direction === 'right') {
+      translateX = curTrans - windowWrap
+    } else {
+      translateX = curTrans + windowWrap
+    }
+    if (translateX > 0) {
+      translateX = 0
+    }
+    if (translateX <= -3450) {
+      translateX = -2300
+    }
+    $('.carrousel').css('transform', 'translateX(' + translateX + 'px)')
+  }, 300);
 }
+
+// 歌词获取
+$.get('https://jirenguapi.applinzi.com/fm/getLyric.php',{sid:sid})
+.done(function(rel){
+  var lyric = parseLrc(JSON.parse(rel).lyric)
+  console.log(lyric)
+})
+
+
+
+
+
+
+
+
 
 
