@@ -1,6 +1,7 @@
 // Ajax 请求
 var audio = new Audio()
 audio.autoplay = true
+var channel = ''
 
 getRanMusic(call)
 function getRanMusic() {
@@ -46,7 +47,7 @@ $('.like').on('click', function () {
 })
 //进度条
 audio.onplaying = function () {
-   process = setInterval(function () {
+  process = setInterval(function () {
     $('.current').css('width', audio.currentTime / audio.duration * 100 + '%')
   }, 1000)
   $('.pause i').removeClass('icon-play')
@@ -54,33 +55,82 @@ audio.onplaying = function () {
 }
 //点击快进
 $('.total').on('click', function (e) {
-     var rate = e.offsetX / parseInt(getComputedStyle(this).width)
-     audio.currentTime = audio.duration * rate 
+  var rate = e.offsetX / parseInt(getComputedStyle(this).width)
+  audio.currentTime = audio.duration * rate
 })
 //时间
-audio.ontimeupdate = function(){
-  var min = Math.floor(audio.currentTime /60)
-  var sec = Math.floor(audio.currentTime) %60 +''
-  $('.time').text(function (){
-     sec = sec.length === 2? sec:'0'+sec
-     return min +':'+ sec
+audio.ontimeupdate = function () {
+  var min = Math.floor(audio.currentTime / 60)
+  var sec = Math.floor(audio.currentTime) % 60 + ''
+  $('.time').text(function () {
+    sec = sec.length === 2 ? sec : '0' + sec
+    return min + ':' + sec
   })
 }
 //音量
-$('.sound span').on('click',function(e){
+$('.sound span').on('click', function (e) {
   event.stopPropagation()
-  if($('.length').css('display') === 'none'){
-    $('.length').attr('style','display:block')
+  if ($('.length').css('display') === 'none') {
+    $('.length').attr('style', 'display:block')
   } else {
-    $('.length').attr('style','display:"none"')
+    $('.length').attr('style', 'display:"none"')
   }
 })
-$('.length').on('click',function(e){
-    var percent = (e.offsetX / 200) *100
-    $('.voice').css('width',percent + '%')
-    audio.volume = e.offsetX / 200
-    $('.circle').css('left', e.offsetX +'px')
+$('.length').on('click', function (e) {
+  var percent = (e.offsetX / 200) * 100
+  $('.voice').css('width', percent + '%')
+  audio.volume = e.offsetX / 200
+  $('.circle').css('left', e.offsetX + 'px')
 })
-
-
-
+$.get('https://jirenguapi.applinzi.com/fm/getSong.php', { channel: "public_yuzhong_hanyu" })
+  .done(function (song) {
+    console.log(JSON.parse(song).song[0])
+  })
+// 专辑滑动
+$('.left').on('click', function () {
+  trans('left')
+})
+$('.right').on('click', function () {
+  trans('right')
+})
+var timer
+function trans(direction) {
+  if(timer){
+    console.log(timer)
+    clearTimeout(timer)
+  }
+    var translateX
+    var transStyle = getComputedStyle(document.querySelector('.carrousel')).transform
+    var curTrans = parseInt(transStyle.split('(')[1].split(')')[0].split(',')[4])
+    var windowWrap = parseInt($('.window').css('width'))
+    if (direction === 'right') {
+      translateX = curTrans - windowWrap
+    } else {
+      translateX = curTrans + windowWrap
+    }
+    if (translateX > 0) {
+      translateX = 0
+    }
+    if (translateX === -2300) {
+      translateX = -2300
+    }
+    $('.carrousel').css('transform', 'translateX(' + translateX + 'px)')
+}
+// var translateX
+// var transStyle = getComputedStyle (document.querySelector('.carrousel')).transform
+// var curTrans = parseInt(transStyle.split('(')[1].split(')')[0].split(',')[4])
+// var windowWrap = parseInt($('.window').css('width'))
+// if(direction === 'right') {
+//     translateX = curTrans - windowWrap
+//     console.log(translateX)
+// } else {
+//   translateX = curTrans + windowWrap
+//   console.log(translateX)
+// }
+//    if(translateX > 0) {
+//      translateX = 0
+//    }
+//    if(translateX === -2300) {
+//     $('.carrousel').css('widht','2300'+'px')
+//    }
+// $('.carrousel').css('transform', 'translateX('+ translateX +'px)')
