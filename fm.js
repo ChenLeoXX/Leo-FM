@@ -1,6 +1,6 @@
 // Ajax 请求
 var audio = new Audio()
-audio.autoplay = true
+audio.autoplay = false
 var channel = ''
 
 getRanMusic(call)
@@ -86,51 +86,37 @@ $.get('https://jirenguapi.applinzi.com/fm/getSong.php', { channel: "public_yuzho
   .done(function (song) {
     console.log(JSON.parse(song).song[0])
   })
-// 专辑滑动
+// 专辑滑动(使用函数节流解决快速点击导致滑动不准确问题)
 $('.left').on('click', function () {
   trans('left')
 })
 $('.right').on('click', function () {
   trans('right')
 })
+//定时器
 var timer
 function trans(direction) {
   if(timer){
-    console.log(timer)
     clearTimeout(timer)
   }
-    var translateX
-    var transStyle = getComputedStyle(document.querySelector('.carrousel')).transform
-    var curTrans = parseInt(transStyle.split('(')[1].split(')')[0].split(',')[4])
-    var windowWrap = parseInt($('.window').css('width'))
-    if (direction === 'right') {
-      translateX = curTrans - windowWrap
-    } else {
-      translateX = curTrans + windowWrap
-    }
-    if (translateX > 0) {
-      translateX = 0
-    }
-    if (translateX === -2300) {
-      translateX = -2300
-    }
-    $('.carrousel').css('transform', 'translateX(' + translateX + 'px)')
+    timer = setTimeout(function() {
+      var translateX
+      var transStyle = getComputedStyle(document.querySelector('.carrousel')).transform
+      var curTrans = parseInt(transStyle.split('(')[1].split(')')[0].split(',')[4])
+      var windowWrap = parseInt($('.window').css('width'))
+      if (direction === 'right') {
+        translateX = curTrans - windowWrap
+      } else {
+        translateX = curTrans + windowWrap
+      }
+      if (translateX > 0) {
+        translateX = 0
+      }
+      if(translateX  <= -3450 ) {
+        translateX = -2300
+      }
+      $('.carrousel').css('transform', 'translateX(' + translateX + 'px)')
+    }, 300);
 }
-// var translateX
-// var transStyle = getComputedStyle (document.querySelector('.carrousel')).transform
-// var curTrans = parseInt(transStyle.split('(')[1].split(')')[0].split(',')[4])
-// var windowWrap = parseInt($('.window').css('width'))
-// if(direction === 'right') {
-//     translateX = curTrans - windowWrap
-//     console.log(translateX)
-// } else {
-//   translateX = curTrans + windowWrap
-//   console.log(translateX)
-// }
-//    if(translateX > 0) {
-//      translateX = 0
-//    }
-//    if(translateX === -2300) {
-//     $('.carrousel').css('widht','2300'+'px')
-//    }
-// $('.carrousel').css('transform', 'translateX('+ translateX +'px)')
+
+
