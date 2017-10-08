@@ -68,6 +68,19 @@ $('.pause').on('click', function () {
     $('.pause i').removeClass('icon-pause').addClass('icon-play')
   }
 })
+//空格暂停/播放
+document.onkeydown = function (e) {
+  if (e.keyCode === 32) {
+    console.log(e)
+    audio.paused === true ? (function pause() {
+      audio.play()
+      $('.pause i').removeClass('icon-play').addClass('icon-pause')
+    })() : (function play() {
+      audio.pause()
+      $('.pause i').removeClass('icon-pause').addClass('icon-play')
+    })()
+  }
+}
 //下一首
 $('.next').on('click', function () {
   $('.like i').css('color', 'white')
@@ -195,14 +208,3 @@ $(window).mousemove(function () {
     $('.static').removeClass('active')
   }, 10000)
 })
-
-
-
-
-
-
-
-
-
-
-
