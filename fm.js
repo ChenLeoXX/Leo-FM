@@ -2,7 +2,8 @@
 var audio = new Audio()
 audio.autoplay = true
 var channel
-getRanMusic(channel)
+var sid
+getRanMusic(channel,sid)
 //jQ写法
 function getRanMusic() {
   $.get('https://jirenguapi.applinzi.com/fm/getSong.php?channel=4', { channel: channel })
@@ -12,6 +13,11 @@ function getRanMusic() {
       getNum()
     }).fail(function(){
             getRanMusic()
+    })
+    $.get('https://jirenguapi.applinzi.com/fm/getLyric.php',{sid:sid})
+    .done(function(rel){
+      var lyric = JSON.parse(rel).lyric
+      console.log(lyric)
     })   
 }
 //原生常规写法
@@ -31,6 +37,7 @@ function getRanMusic() {
 //   loadMusic(musicObj)
 // }
 function loadMusic() {
+  sid = musicObj.sid
   audio.src = musicObj.url
   $('.songauthor').text(musicObj.artist)
   $('.author p').text(musicObj.title)
@@ -140,13 +147,37 @@ function trans(direction) {
     $('.carrousel').css('transform', 'translateX(' + translateX + 'px)')
   }, 300);
 }
+//全屏监听，进入静止状态
+var staticTimer
+
+$(window).on('mouseover',function(){
+  if(staticTimer) {
+    clearTimeout(staticTimer)
+  }
+   staticTimer = setTimeout(function (){
+    $('.music-panel').addClass('active')
+    $('.control').addClass('active')
+    $('.albums').addClass('active')
+    $('.album-img img').addClass('location')
+    $('.static').removeClass('active')     
+},10000)
+    $('.music-panel').removeClass('active')
+    $('.control').removeClass('active')
+    $('.albums').removeClass('active')
+    $('.album-img img').removeClass('location')
+    $('.static').addClass('active')     
+    console.log(this)
+})
 
 // 歌词获取
-$.get('https://jirenguapi.applinzi.com/fm/getLyric.php',{sid:sid})
-.done(function(rel){
-  var lyric = parseLrc(JSON.parse(rel).lyric)
-  console.log(lyric)
-})
+function getLrc() {
+  $.get('https://jirenguapi.applinzi.com/fm/getLyric.php',{sid:sid})
+  .done(function(rel){
+    var lyric = JSON.parse(rel).lyric
+    console.log(lyric)
+  })
+}
+
 
 
 
