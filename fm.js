@@ -4,24 +4,44 @@ audio.autoplay = true
 audio.volume = 0.6
 var channel
 var sid
+var timeReg = /\[\d{2}:\d{2}.\d{2}\]/g
+var result
+//歌词滚动
+var curTop = $('.ct-lrc')
+var minTop = $('.min-ct')
+var musicObj
 //jQ写法
 getRanMusic(channel, sid)
+
 function getRanMusic() {
-  $.get('https://jirenguapi.applinzi.com/fm/getSong.php?channel=4', { channel: channel })
+  console.log('1')
+  $.get('https://jirenguapi.applinzi.com/fm/getSong.php?channel=4', {
+      channel: channel || 'public_xinqing_qingsongjiari'
+    })
     .done(function (song) {
+      console.log(song)
       musicObj = JSON.parse(song).song[0]
+      console.log(musicObj)
       loadMusic(musicObj)
       getNum()
-    }).fail(function () {
-      getRanMusic()
+    }).fail(function (e) {
+      getRanMusic(channel, sid)
     })
 }
 // 歌词获取
 function getLrc() {
-  $.get('https://jirenguapi.applinzi.com/fm/getLyric.php', { sid: sid })
+  $.get('https://jirenguapi.applinzi.com/fm/getLyric.php', {
+      sid: sid
+    })
     .done(function (musicObj) {
-      var lyric = JSON.parse(musicObj).lyric
-      console.log(lyric)
+      var lyrics = JSON.parse(musicObj).lyric
+      console.log(lyrics)
+      // if(){
+
+      // }
+      parseLrc(lyrics)
+      showLrc(result)
+      // minLrc(result)
     })
 }
 
@@ -41,6 +61,7 @@ function getLrc() {
 //   console.log(musicObj)
 //   loadMusic(musicObj)
 // }
+//加载音乐
 function loadMusic(musicObj) {
   audio.src = musicObj.url
   sid = musicObj.sid
@@ -84,11 +105,11 @@ document.onkeydown = function (e) {
 //下一首
 $('.next').on('click', function () {
   $('.like i').css('color', 'white')
-  getRanMusic(musicObj)
+  getRanMusic(channel, sid)
 })
 //自动播放下一首
 audio.onended = function () {
-  getRanMusic(channel)
+  getRanMusic(channel, sid)
 }
 //喜欢
 $('.like').on('click', function () {
@@ -129,6 +150,16 @@ audio.ontimeupdate = function () {
     sec = sec.length === 2 ? sec : '0' + sec
     return min + ':' + sec
   })
+  //歌词同步
+  //  console.log(audio.currentTime)
+  for (let i = 0; i < result.length; i++) {
+    if(!result.length) break
+    if (Number(audio.currentTime.toFixed(2)) > Number(result[i][0].toFixed(2))) {
+      curTop.css('top', '-' + curTop.children().eq(i).css('top'))
+      curTop.children().eq(i).addClass('lrc-font')
+      curTop.children().eq(i - 1).removeClass('lrc-font')
+    }
+  }
 }
 //音量
 $('.sound span').on('click', function (e) {
@@ -165,6 +196,7 @@ $('.right').on('click', function () {
 })
 //定时器
 var timer
+
 function trans(direction) {
   if (timer) {
     clearTimeout(timer)
@@ -206,5 +238,68 @@ $(window).mousemove(function () {
     $('.albums').addClass('active')
     $('.album-img img').addClass('location')
     $('.static').removeClass('active')
+    $('.min-ct').removeClass('active')
   }, 10000)
+})
+//解析歌词
+function parseLrc(lyrics) {
+  result = []; //最后的歌词格式[tiem,lrc]//歌词和时间分离出来
+  var lrc = lyrics.split(/\n/) // 把歌词变为一行一回车的数组
+  //  while 语句有BUG lrc = lrc.slice(1) //去除第一个包含时间的歌词，以便下面去除不包含时间的歌词
+  // while (!timeReg.test(lrc[0])) {
+  //   lrc = lrc.slice(1)
+  // }  //去除不包含歌词的行
+  lrc.pop(lrc[lrc.length - 1]) //由于上面使用split数组最后一个为空字符串。
+  lrc.forEach(function (v, i, a) {
+    var time = v.match(timeReg) //匹配出纯时间
+    var value = v.replace(timeReg, '') //匹配出纯歌词
+    if (time) {
+      time.forEach(function (v1) {
+        var t = v1.slice(1, -1).split(':') //可能包含多个时间，再次处理
+        result.push([parseInt(t[0], 10) * 60 + parseFloat(t[1]), value]) // 排进数组
+        result.sort(function (a, b) {
+          return a[0] - b[0]
+        })
+        return result
+      })
+    } else {
+      return result
+    }
+  })
+}
+// //显示歌词
+function showLrc(result) {
+  var $lrc = $('.ct-lrc')
+  var $frag = $(document.createDocumentFragment())
+  for (let j = 0, l = result.length; j < l; j++) {
+    var $li = $('<p>' + result[j][1] + '</p>')
+    $li.css('top', j * 26 + 'px')
+    $frag.append($li)
+  }
+  $lrc.empty()
+  $lrc.append($frag)
+}
+// function minLrc(result) {
+//   var $lrc = $('.min-lrc')
+//   var $frag = $(document.createDocumentFragment())
+//   for (let j = 0, l = result.length; j < l; j++) {
+//     var $li = $('<p>' + result[j][1] + '</p>')
+//     $li.css('top', j * 33 + 'px')
+//     $frag.append($li)
+//   }
+//   $(".min-ct").empty()
+//   $('.min-ct').append($frag)
+// }
+
+//歌词隐藏/出现
+$('.lrc').click(function () {
+  if ($(".ct-lrc").css("display") === 'none') {
+    $('#lyric').children().fadeIn()
+    $('.tab').fadeOut()
+    $('.music-info').fadeOut()
+  } else {
+    $('#lyric').children().fadeOut()
+    $('.tab').fadeIn()
+    $('.music-info').fadeIn()
+  }
 })

@@ -35,8 +35,9 @@ body {
 
 main {
     max-width: 1300px;
-    padding: px;
+    /* padding: px; */
     margin: auto;
+    height: calc(100vh - 150px);
 }
 
 .bg {
@@ -50,7 +51,7 @@ main {
 }
 
 .info {
-    margin-left: 9%;
+    margin-left: 14.3vh;
     margin-top: 4%;
     float: left;
 }
@@ -74,6 +75,7 @@ main {
 }
 
 .music-panel {
+    position: relative;
     margin-left: 9%;
     margin-top: 4%;
     float: left;
@@ -97,6 +99,7 @@ main {
 }
 
 .music-info {
+    visibility: visible;
     color: #fff;
     display: flex;
     justify-content: space-between;
@@ -190,6 +193,10 @@ main {
 }
 
 
+.tab {
+    visibility: visible;
+    top:290px;
+}
 /* 专辑滚动 */
 
 .albums {
@@ -307,4 +314,47 @@ main {
     width: 0%;
     background: #ddd;
     top: 0px;
+}
+/* 歌词部分 */
+#lyric {
+    display: block;
+    width:400px;
+    position: absolute;
+    right:-165px;
+    top:85px;
+    height:49.5vh;
+    overflow: hidden;
+}
+.ct-lrc {
+    display: none;
+    position: absolute;
+    color:rgb(253, 251, 251);
+    font-size: 20px;
+    top:0px;
+}
+.ct-lrc p {
+    margin-top: 10px;
+}
+.show {
+    font-size:25px;
+    color:#fff;
+}
+.min-ct {
+    position: relative;
+    width:500px;
+    height:50px;
+    margin: 10px auto;
+    top:0;
+}
+.min-lrc {
+    position: absolute;
+    top:-60%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    display: block;
+    overflow: hidden;
+}
+.lrc-font {
+    font-size: 30px;
+    color: rgb(252, 65, 106);
 }
